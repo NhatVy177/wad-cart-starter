@@ -22,7 +22,7 @@
 ## 2026-09-29 — Format gate: Prettier
 - **Tool:** Claude Opus 4.6.
 - **Asked for:** Add Prettier as a formatting gate without violating the "no runtime dependencies" rule.
-- **Kept:** Added `"lint": "prettier --check ."` to `package.json` scripts and updated CI.
+- **Kept:** Added `"lint": "prettier --check ."` to `package.json` scripts, and kept `.prettierrc.json` and `.gitattributes` to enforce consistent LF line endings and styling.
 - **Changed:** Pinned Prettier to an exact version (`3.9.9`) in `devDependencies`. 
 - **Rejected:** The AI initially left `devDependencies` empty. I rejected this because the format script wouldn't work on CI without installing Prettier.
 - **By hand:** Ran `npm run lint:fix` to auto-format everything cleanly.
