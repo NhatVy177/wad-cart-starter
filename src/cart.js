@@ -5,8 +5,12 @@ export function cartTotal(items, options) {
 
   // Validate each item
   for (const item of items) {
-    if (item.price < 0) {
-      throw new RangeError(`Negative price: ${item.price}`);
+    if (
+      typeof item.price !== "number" ||
+      !Number.isFinite(item.price) ||
+      item.price < 0
+    ) {
+      throw new RangeError(`Invalid price: ${item.price}`);
     }
     if (!Number.isInteger(item.qty) || item.qty < 1) {
       throw new RangeError(`Invalid quantity: ${item.qty}`);

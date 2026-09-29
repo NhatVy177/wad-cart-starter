@@ -8,8 +8,6 @@ const DEFAULT_OPTIONS = { vatRate: 0.08, freeShipFrom: 500000, shipFee: 30000 };
 // 1. WORKED EXAMPLE (from the slides / README)
 // ──────────────────────────────────────────────
 
-// This test fails until you implement cartTotal. That is the point:
-// run `npm test` first and see it red.
 test("the example from the slides", () => {
   const items = [
     { name: "Áo thun", price: 180000, qty: 2 },
@@ -46,6 +44,21 @@ test("negative price in second item throws RangeError", () => {
     { name: "Good", price: 100000, qty: 1 },
     { name: "Bad", price: -50, qty: 2 },
   ];
+  assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
+});
+
+test("price = NaN throws RangeError", () => {
+  const items = [{ name: "Bad", price: NaN, qty: 1 }];
+  assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
+});
+
+test("price = Infinity throws RangeError", () => {
+  const items = [{ name: "Bad", price: Infinity, qty: 1 }];
+  assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
+});
+
+test("price is not a number throws RangeError", () => {
+  const items = [{ name: "Bad", price: "10000", qty: 1 }];
   assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
 });
 
@@ -184,7 +197,7 @@ test("multiple items crossing threshold together", () => {
   assert.equal(cartTotal(items, DEFAULT_OPTIONS), 594000);
 });
 
-test("single item, qty = 1, below threshold", () => {
+test("single item, qty = 3, below threshold", () => {
   const items = [{ name: "Bút", price: 15000, qty: 3 }];
   // subtotal = 45000, vat = 3600, ship = 30000 → 78600
   assert.equal(cartTotal(items, DEFAULT_OPTIONS), 78600);

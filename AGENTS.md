@@ -2,17 +2,18 @@
 
 ## Stack
 - **Language:** JavaScript (ES modules)
-- **Runtime:** Node.js ≥ 18
+- **Runtime:** Node.js ≥ 22
 - **Test runner:** `node --test` (built-in, no framework)
-- **Formatter:** Prettier (via `npx prettier`)
-- **Dependencies:** none — `package.json` must have zero `dependencies` and zero `devDependencies` at submission
+- **Formatter:** Prettier (pinned in `devDependencies`)
+- **Runtime dependencies:** none — `cartTotal` uses only built-in JS
+- **Dev dependencies:** `prettier` only — for formatting checks
 
 ## Commands
 | Task | Command |
 |------|---------|
 | Run tests | `npm test` |
-| Format check | `npm run format:check` |
-| Format fix | `npm run format` |
+| Check formatting | `npm run lint` |
+| Fix formatting | `npm run lint:fix` |
 
 ## Rules
 1. **Never** add runtime dependencies — the function must work with plain JS only.
@@ -27,6 +28,12 @@
 - `test/cart.test.js` — the test suite
 
 ## Files the assistant must NOT touch
-- `package.json` (except adding scripts)
+- `package.json` (except `scripts` and `devDependencies`)
 - `README.md`
 - `.gitignore`
+
+## Before you finish
+1. Run `npm test` — all tests must pass.
+2. Run `npm run lint` — no formatting errors.
+3. Read the diff (`git diff`) — nothing outside scope.
+4. Do not add files, dependencies, or scripts beyond what is listed above.

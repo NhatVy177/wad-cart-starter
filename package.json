@@ -4,7 +4,10 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "format": "npx prettier --write \"src/**/*.js\" \"test/**/*.js\"",
-    "format:check": "npx prettier --check \"src/**/*.js\" \"test/**/*.js\""
+    "lint:fix": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
+    "lint": "prettier --check \"src/**/*.js\" \"test/**/*.js\""
+  },
+  "devDependencies": {
+    "prettier": "3.9.9"
   }
 }

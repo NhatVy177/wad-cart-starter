@@ -1,5 +1,25 @@
-Implement `cartTotal(items, options)` in `src/cart.js` — plain JavaScript, no dependencies. Homework, on your own.
-Start from the starter repository: https://github.com/fithcmus/wad-cart-starter — it has package.json, one failing test and .gitignore. Run npm test and watch it fail before you write anything.
-The specification is on slides 24-25 of the session 2 deck and in the starter's README: subtotal plus VAT plus shipping, free shipping at the threshold, an empty cart returns 0, a negative price or a non-integer quantity throws RangeError, and the result is a number rounded to the whole đồng. The worked example returns 467400.
-Four steps, in this order: set up the harness (rules file, one gate, npm test red), write the brief, run the loop and read every diff, then write the AI-LOG entry while it is fresh.
-Submit one zip named after your student ID and the mark you give yourself: <StudentID>_<total>.zip, for example 23120001_82.zip. It must contain your repository, the brief, AI-LOG.md, and SELF_ASSESSMENT_REPORT.md — one row per rubric criterion with evidence, adding up to that total. The rubric is attached; read it before you start.
+Implement `cartTotal(items, options)` in `src/cart.js` — plain JavaScript, no dependencies.
+
+**Specification (from README.md):**
+- `items`: array of objects `{ name: string, price: number, qty: number }`.
+- `options`: object `{ vatRate: number, freeShipFrom: number, shipFee: number }`.
+- **Subtotal**: sum of (price × qty) for all items.
+- **VAT**: subtotal × vatRate.
+- **Shipping**: 0 if subtotal >= freeShipFrom, otherwise shipFee.
+- **Total**: subtotal + VAT + shipping, rounded to the nearest whole đồng.
+
+**Validation Rules:**
+- Empty cart (no items or 0 items) returns `0` (no VAT, no shipping).
+- If any item has a negative price, NaN, Infinity, or non-number price, throw `RangeError`.
+- If any item has a non-integer quantity or qty < 1, throw `RangeError`.
+
+**Files you may touch:**
+- `src/cart.js` — the implementation
+- `test/cart.test.js` — the test suite (must use `node:test`)
+
+**Files you must NOT touch:**
+- `package.json` (except adding format scripts/devDependencies)
+- `README.md`
+- `.gitignore`
+
+The worked example (2 Áo thun @ 180000, 1 Sổ tay @ 45000, 8% VAT, 500000 threshold, 30000 fee) must return 467400. Write robust tests for edge cases.
