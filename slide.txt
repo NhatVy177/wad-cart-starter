@@ -1,0 +1,250 @@
+Today
+Where session 1 left off
+The ground first: Node, modules, npm, tests, git
+The harness: rules file, linter, types, tests, CI
+The loop: Plan → Implement → Validate
+The human gate: what you must not delegate
+Writing a brief an assistant can actually execute
+IA#1: what you build this week, and how it is marked
+
+Where we left off
+AI is allowed here, and assessed openly
+Every submission carries AI-LOG.md
+You own the code — you will be asked about any line of it
+Teams of up to 3, named on your first submission
+Session 1 was the policy. Today is the practice
+
+The bottleneck moved
+Typing the lines is no longer the slow part
+An assistant writes 200 lines in a minute
+You still have to decide whether those 200 lines are right
+So the work that matters is before the generation and after it
+That work has a shape, and it is teachable
+
+Part 0: the ground for today
+Everything after this assumes you can run JavaScript outside a browser
+If a command below fails on your laptop, fix it now, not tonight
+
+Check your machine, now
+node -v     # v22.x or newer
+npm -v      # 10.x or newer
+git --version
+All three must answer. If one does not, install it before we go on
+Node runs JavaScript outside the browser: no window, no DOM, no page
+VS Code is the editor we will use in every demo
+
+One file is one module
+// src/cart.js
+export function cartTotal(items, options) { ... }
+
+// test/cart.test.js
+import { cartTotal } from '../src/cart.js'
+export makes a name visible outside the file; import pulls it in
+Modern syntax (ESM) needs one line in package.json: "type": "module"
+The file extension is required in the import path — '../src/cart.js', not '../src/cart'
+
+The JavaScript you need today
+const items = [{ price: 180000, qty: 2 }, { price: 45000, qty: 1 }]
+
+const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0)  // 405000
+const rounded  = Math.round(subtotal * 0.08)                          // 32400
+
+if (!Number.isInteger(qty) || qty <= 0) throw new RangeError('bad qty')
+reduce walks the array and accumulates one value
+throw stops the function and hands the error to the caller
+Everything else today is these three lines in different clothes
+
+npm and package.json
+{ "name": "cart", "type": "module",
+  "scripts": { "test": "node --test" } }
+package.json is the project's identity card: name, type, scripts, dependencies
+npm run <name> runs a script; npm test is the one we will use all semester
+node_modules/ is downloaded, never written by you, and never committed
+Every package you add is code you are responsible for. Add few
+
+What a test is
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { cartTotal } from '../src/cart.js'
+
+test('empty cart costs nothing', () => {
+  assert.equal(cartTotal([], { vatRate: 0.08 }), 0)
+})
+A test is a small program that fails loudly when your code is wrong
+Node runs it: npm test. Red first, then green — that order matters
+No library to install: node:test ships with Node
+
+Git, five commands
+git clone https://github.com/fithcmus/wad-cart-starter    # get the starter
+git status               # what changed
+git add -A               # stage everything
+git commit -m "message"  # save a point you can return to
+git push                 # send it to GitHub
+One repository per team, created once, used for the whole semester
+Commit small and often — a commit is the only way back from a bad afternoon
+
+Part 1: the harness
+The gates you build once, in week 1
+They run without you, on every change, for the rest of the semester
+
+What a harness is
+Everything around the assistant that catches a mistake before you do
+Rules file · formatter · linter · type checker · tests · CI
+Not paperwork: every item is a check that runs without you
+An assistant that can run your checks fixes its own mistakes first
+Build it in week 1 — this is PA#5, the harness dossier, 5% of your grade
+
+The project rules file
+One file at the repository root that the assistant reads every time
+Claude Code CLAUDE.md · Cursor .cursor/rules · Copilot .github/copilot-instructions.md
+It answers what a new teammate would ask on their first day
+Short and specific beats long and vague — nobody reads a 40-line rule set, including the model
+
+→ ← slide · o index · f fullscreen · d dark · ? keys
+What goes in it
+# Project rules
+Stack: React 19 + Vite, Express 5, PostgreSQL. Nothing else without asking.
+Style: 2-space indent, named exports, no default exports.
+Commands: npm run dev · npm test · npm run lint · npm run typecheck
+Tests: every new endpoint gets a test under tests/api/.
+Never: commit .env, edit db/migrations/, install a package without asking.
+Write it for a stranger, not for the teammate who already knows
+
+Table
+
+The gates that run themselves
+Gate	What it catches	Command
+Formatter	arguments about style	npm run format
+Linter	unused code, unsafe patterns	npm run lint
+Type checker	wrong shapes, wrong names	npm run typecheck
+Tests	behaviour that broke	npm test
+CI	"it works on my machine"	on every push
+
+Part 2: the loop
+Plan → Implement → Validate, and where you stand in it
+
+Plan: what a brief contains
+What to build, in one sentence
+The files it may touch — and the ones it must not
+The contract: inputs, outputs, and what happens on bad input
+How you will know it worked
+What it must not invent: libraries, endpoints, database columns
+
+Two briefs for the same task
+Weak	Strong
+Ask	"add search to the product page"	"add a ?q= filter to GET /api/products, case-insensitive, matching name only"
+Scope	unstated	"touch routes/products.js and its test; do not touch the schema"
+Done	"make it work"	"npm test green, including an empty-result case"
+Result	a new dependency, a changed schema, 300 lines	20 lines you can read in a minute
+
+Implement: keep the steps small
+One concern per run: a route, a component, a migration — not all three
+Read the diff before you run it, not after it breaks
+If the reply is much longer than the question, stop and re-brief
+A fresh start with a better brief beats arguing with a long conversation
+
+Validate: what "done" means
+It runs, tests pass, linter and type checker are clean
+You read every line and can explain it
+You tried the failure case, not only the happy path
+The diff contains nothing you did not ask for
+Anything that fails here is a rule you were missing
+
+Five red flags when reading generated code
+An API that does not exist — the signature looks right, the function does not
+A package you never chose, added quietly to package.json
+Error handling that swallows the error — catch {}, or a log and nothing else
+A second copy of something already in the repo
+A test that cannot fail — it asserts the mock, not your code
+
+Part 3: the gate, and this week's work
+The one step that stays human, and the homework that goes with it
+
+Where the human gate belongs
+an action the agent proposes
+Can you undo it
+with one command?
+let the loop run —
+then review the result
+human gate —
+you run it yourself
+yes
+no
+Irreversible in practice: migrations, deploys, deleting data, sending mail to real people, anything with money in 
+
+When not to delegate
+Anything irreversible — see the previous slide
+Anything you do not understand yet: you cannot review what you cannot read
+The decision that defines the product — an assistant optimises, it does not choose
+Security-critical code you have no way to test
+Saying "I did this part myself" is a valid entry in AI-LOG.md
+
+AI-LOG.md, in practice
+## 2026-09-24 — product list page
+Tool: Claude Code.
+Asked for: ProductList + ProductCard from docs/spec-catalogue.md
+Changed: it invented a useFetch hook — replaced with our fetchJson helper.
+         It stored the filtered array in state; I derived it instead.
+Not used: its CSS. We use the team's tokens.
+Three honest lines per task is enough. Nobody wants a transcript
+
+IA#1 — this week's task · 5%
+Homework, on your own. Deadline and rubric are on Classroom.
+
+Write cartTotal(items, options) in src/cart.js — plain JavaScript, no dependencies.
+
+cartTotal(
+  [{ name: 'Áo thun', price: 180000, qty: 2 },
+   { name: 'Sổ tay',  price:  45000, qty: 1 }],
+  { vatRate: 0.08, freeShipFrom: 500000, shipFee: 30000 }
+)  // => 467400
+subtotal 405000 + VAT 32400 + shipping 30000, rounded to whole đồng
+
+The rules it must follow
+Case	Expected
+subtotal ≥ freeShipFrom	shipping is 0
+empty cart	returns 0, no VAT, no shipping
+price negative, or qty not a positive integer	throws RangeError
+result	a number, rounded to the whole đồng
+dependencies	none — node:test only
+Same spec for everyone, so we can compare what came back.
+
+Four steps, in this order
+The harness. Clone the starter — github.com/fithcmus/wad-cart-starter
+— it has package.json, one failing test and .gitignore. Run
+
+npm test, see it red. Then write your rules file.
+
+The brief. Turn the two slides above into a brief: files it may touch,
+the contract, the error cases, "no dependencies".
+
+The loop. Let it implement. Read the diff before you run it. Run
+npm test. Re-brief instead of arguing.
+
+The log. Write the AI-LOG.md entry while it is fresh.
+You hand in four things: the repository, the brief, the AI-LOG.md entry, and
+
+SELF_ASSESSMENT_REPORT.md.
+
+What we look at when marking
+Did it add a dependency you did not ask for?
+Did it round with toFixed(0) and return a string? cartTotal(...) === 467400 then fails
+Did it handle qty: 0, qty: 1.5, price: -1 — or only the happy path?
+Did its tests assert the implementation instead of the spec?
+Which of these did your brief already rule out, and which did you have to catch by reading?
+The full rubric is attached to the assignment on Classroom — 100 points across
+
+behaviour, tests, harness, brief, and AI-LOG.md.
+
+Before next week
+Push to your repository: rules file, src/cart.js, npm test green, CI running
+Submit on Classroom one zip named <StudentID>_<total>.zip: repository
+link, your brief, this week's AI-LOG.md, and SELF_ASSESSMENT_REPORT.md
+
+The total in the file name is the mark you give yourself against the rubric
+Read the rubric before you start, not after you submit — it is on Classroom
+PA#5, the team harness dossier, builds on the same rules file
+Next session: web design principles and responsive CSS — PA#1 is assigned there
+
+
+
