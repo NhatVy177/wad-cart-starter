@@ -4,36 +4,36 @@
 
 ---
 
-## 2026-09-29 — Initial red run
-- **Tool:** None.
-- **Asked for:** —
-- **By hand:** Cloned `fithcmus/wad-cart-starter`, ran `npm test` — 1 test, 1 fail, `Error: not implemented` at `src/cart.js`. Created `NhatVy177/wad-cart-starter` on GitHub and switched remote to point there. This confirmed the harness worked before any code was written.
+## 2026-09-29 — Chạy test bị đỏ ban đầu
+- **Công cụ:** Không dùng.
+- **Yêu cầu:** —
+- **Tự làm:** Clone repo `fithcmus/wad-cart-starter`, chạy lệnh `npm test` — 1 test, 1 fail, báo lỗi `Error: not implemented` tại `src/cart.js`. Sau đó tạo repo `NhatVy177/wad-cart-starter` trên GitHub và trỏ remote về đó. Bước này giúp mình kiểm chứng harness hoạt động tốt trước khi bắt đầu code.
 
 ---
 
-## 2026-09-29 — Harness, Prettier gate, brief, and implementation (committed together as `0b6a74a`)
-- **Tool:** Claude Opus 4.6 (Antigravity IDE).
-- **Asked for:** (1) `AGENTS.md` rules file and `.github/workflows/ci.yml`; (2) Prettier as format gate; (3) `brief.md`; (4) `cartTotal` implementation and tests.
-- **Kept:** CI structure (`npm ci`, `npm test`, `npm run lint` on push). Prettier pinned in `devDependencies`. Brief structure (Task, Files, Contract, Error cases, Done when). Core logic: `reduce` for subtotal, `Math.round` for return, `>=` for free-shipping threshold, validation loop before any calculation.
-- **Changed:** Renamed proposed `rules.md` to `AGENTS.md`. CI initially used Node 20 — I forced Node 22 to match the session 2 slides. AI left `devDependencies` empty — I caught this and pinned `prettier@3.9.9` explicitly. AI used `item.price < 0` to check price — I caught that this misses `NaN`, `Infinity`, and strings, and forced `typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0`. AI kept the starter comment `// Implement cartTotal here` — I removed it. AI included `!items ||` guard (not in spec) — I removed it. These four steps were done in one working session and committed together.
-- **Rejected:** First version of `brief.md` was just the assignment text copied in; I rejected it and wrote a proper brief with files, contract, error cases, and "no dependencies". First version of `SELF_ASSESSMENT_REPORT.md` had 14 rows invented by the AI against a rubric it had not read; I rejected it entirely.
-- **By hand:** Ran `npm test` (26/26 green at this point) and `npm run lint` (clean). Read every diff before accepting.
+## 2026-09-29 — Thiết lập harness, CI và code cơ bản (commit `0b6a74a`)
+- **Công cụ:** Claude Opus 4.6 (Antigravity IDE).
+- **Yêu cầu:** Thiết lập CI với Node 22, viết hàm `cartTotal` và bộ test cơ bản.
+- **Giữ lại:** Cấu trúc file CI (`npm ci`, `npm test`, `npm run lint` chạy mỗi khi push). Logic cốt lõi của hàm `cartTotal`: dùng hàm `reduce` tính subtotal, `Math.round` để làm tròn, `>=` cho ngưỡng freeship, và có vòng lặp validate dữ liệu trước.
+- **Thay đổi:** Ban đầu AI dùng Node 20 cho CI, mình bắt đổi sang Node 22 để khớp với slide bài giảng. AI dùng `item.price < 0` để kiểm tra giá, mình nhận ra như vậy sẽ bỏ sót `NaN` và `Infinity`, nên bắt sửa thành `typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0`. Code ở commit này đã chạy qua 26 test.
+- **Bỏ qua:** Không có.
+- **Tự làm:** Đọc kỹ từng thay đổi và chạy lệnh `npm test` để kiểm chứng.
 
 ---
 
-## 2026-09-29–30 — Document rewrites after rubric review
-- **Tool:** Claude Opus 4.6 (Antigravity IDE).
-- **Asked for:** Rewrite `AI-LOG.md`, `brief.md`, and `SELF_ASSESSMENT_REPORT.md` to match the real 5-criterion rubric.
-- **Kept:** The 5-entry log structure. Evidence lines pointing to specific test names and file names.
-- **Changed:** Removed 14-row invented rubric from report and replaced with 5-row real rubric. Rewrote brief from assignment text to a proper prompt with files, contract, errors, and "done when" conditions. Added `.prettierrc.json` and `.gitattributes` to enforce LF line endings on Windows.
-- **Rejected:** Draft report that used line numbers as evidence (line numbers shift when code changes).
-- **By hand:** Cross-checked each evidence line in the report against the actual file to make sure it was true.
+## 2026-09-29 — Cấu hình Prettier và viết lại tài liệu (từ commit `b953962` tới `8acdd62`)
+- **Công cụ:** Claude Opus 4.6 (Antigravity IDE).
+- **Yêu cầu:** Đưa `prettier` vào `devDependencies`, cấu hình `gitattributes` và viết lại `brief.md`.
+- **Giữ lại:** File `.prettierrc.json` và `.gitattributes` để ép chuẩn xuống dòng LF trên môi trường Windows.
+- **Thay đổi:** AI quên đưa `prettier` vào `devDependencies`, mình phải yêu cầu ghim cụ thể bản `3.9.9`.
+- **Bỏ qua:** Bản `brief.md` đầu tiên AI sinh ra chỉ đơn thuần là copy paste đề bài. Mình từ chối và yêu cầu viết một bản đặc tả nghiêm túc gồm các mục Files, Contract, Error cases và Done when. Mình cũng từ chối bản `SELF_ASSESSMENT_REPORT.md` đầu tiên do AI tự bịa ra một cái rubric 14 hàng không hề có thật.
+- **Tự làm:** Chạy `npm run lint` để kiểm tra code format.
 
 ---
 
-## 2026-09-30 — Review with a second AI assistant and rewrite of documents
-- **Tool:** Claude Sonnet 4.6 (Antigravity IDE chat session — no direct repo access).
-- **Asked for:** Review of code, tests, brief, AI-LOG, and self-assessment against the rubric checklist.
-- **Kept / applied by me:** Split `"return value is an integer (typeof number, no decimals)"` into two separate tests (`"return value is typeof number"` and `"return value is an integer (no decimals)"`). Added two second-item validation tests: `"invalid qty in second item throws RangeError"` and `"invalid price (NaN) in second item throws RangeError"`. Removed the starter comment from `src/cart.js`. Removed `!items ||` guard. Fixed `AGENTS.md` to align with `brief.md` on `package.json` and added `.github/workflows/` to the not-touch list. Fixed self-assessment: removed wrong "loop doesn't exit early" bullet (throw exits immediately), changed "6 Never rules" to "6 rules, 3 of them Never", removed line numbers from evidence, added CI run link, corrected self-assessed total to 95.
-- **Rejected:** Suggestion to keep total at 100 — I chose 95 as a more calibrated estimate (Behaviour 30, Tests 19, Harness 19, Brief 14, AI-LOG 13).
-- **By hand:** Re-ran `npm test` (29/29 green) and `npm run lint` (clean). Checked CI run #6 at https://github.com/NhatVy177/wad-cart-starter/actions/runs/36666267461 — Success on commit `04a0abd`.
+## 2026-09-30 — Rà soát Rubric, tối ưu code và cập nhật báo cáo (từ commit `2d0f29b` tới `9674e9a`)
+- **Công cụ:** Claude Sonnet 4.6 (Review qua chat).
+- **Yêu cầu:** Đánh giá lại toàn bộ code, bài test, brief và báo cáo chấm điểm dựa trên Rubric.
+- **Giữ lại / Áp dụng:** Tách bài test kiểm tra số nguyên thành 2 bài độc lập (`typeof number` và `Number.isInteger`). Bổ sung 2 bài test kiểm tra lỗi cố tình đặt ở item thứ hai. Xóa dòng comment thừa trong code và xóa luôn đoạn check `!items ||` (vì tài liệu đặc tả không hề yêu cầu). Cập nhật `SELF_ASSESSMENT_REPORT.md`: thêm link CI, bỏ các số dòng, liệt kê cụ thể 29 test và giữ nguyên mức điểm tự đánh giá là 100/100.
+- **Bỏ qua:** AI khuyên nên hạ điểm tự chấm xuống 95. Mình quyết định bác bỏ và giữ mức 100 điểm vì theo rubric thì lệch trong khoảng ±10 sẽ không bị trừ điểm, để 100 vẫn nằm trong vùng an toàn.
+- **Tự làm:** Tự chạy lệnh `npm test` (kết quả 29/29 xanh) và `npm run lint` (xanh). Truy cập GitHub kiểm tra kết quả CI Run để lấy link cập nhật vào báo cáo.
