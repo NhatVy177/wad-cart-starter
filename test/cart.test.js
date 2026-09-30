@@ -62,6 +62,22 @@ test("price is not a number throws RangeError", () => {
   assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
 });
 
+test("invalid qty in second item throws RangeError", () => {
+  const items = [
+    { name: "Good", price: 100000, qty: 2 },
+    { name: "Bad", price: 50000, qty: 0 },
+  ];
+  assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
+});
+
+test("invalid price (NaN) in second item throws RangeError", () => {
+  const items = [
+    { name: "Good", price: 100000, qty: 1 },
+    { name: "Bad", price: NaN, qty: 1 },
+  ];
+  assert.throws(() => cartTotal(items, DEFAULT_OPTIONS), RangeError);
+});
+
 // ──────────────────────────────────────────────
 // 4. VALIDATION — non-positive-integer qty throws RangeError
 // ──────────────────────────────────────────────
@@ -154,11 +170,17 @@ test("fractional total at .5 rounds up", () => {
   assert.equal(cartTotal(items, options), 30006);
 });
 
-test("return value is an integer (typeof number, no decimals)", () => {
+test("return value is typeof number", () => {
   const items = [{ name: "Test", price: 33333, qty: 1 }];
   const options = { vatRate: 0.07, freeShipFrom: 500000, shipFee: 30000 };
   const result = cartTotal(items, options);
   assert.equal(typeof result, "number");
+});
+
+test("return value is an integer (no decimals)", () => {
+  const items = [{ name: "Test", price: 33333, qty: 1 }];
+  const options = { vatRate: 0.07, freeShipFrom: 500000, shipFee: 30000 };
+  const result = cartTotal(items, options);
   assert.equal(Number.isInteger(result), true);
 });
 

@@ -1,7 +1,6 @@
-// Implement cartTotal here. See README.md for the specification.
 export function cartTotal(items, options) {
   // Empty cart → 0 (no VAT, no shipping)
-  if (!items || items.length === 0) return 0;
+  if (items.length === 0) return 0;
 
   // Validate each item
   for (const item of items) {

@@ -7,7 +7,7 @@ Implement `cartTotal(items, options)` in `src/cart.js` to ensure the existing fa
 - `src/cart.js` — the implementation.
 - `test/cart.test.js` — add comprehensive tests; keep the existing starter test untouched.
 
-Do **not** touch: `package.json`, `README.md`, `.gitignore`, `AGENTS.md`, or any GitHub workflow files.
+Do **not** touch: `README.md`, `.gitignore`, `AGENTS.md`, or any GitHub workflow files. Do not change `package.json` (its `prettier` devDependency is already set up — do not add anything else).
 
 ## Constraints
 - **No runtime dependencies.** The function must use plain JavaScript only (ES modules). `package.json` already contains `prettier` as a devDependency for our `lint` gate — do not change this or install anything else.
@@ -46,4 +46,4 @@ Write exhaustive tests covering:
 7. A free item (`price = 0`) is processed successfully without errors.
 
 ## Done when
-`npm test` passes all cases (100% coverage), `npm run lint` format checks are green, and no unauthorized files are touched.
+`npm test` green, `npm run lint` green, only `src/cart.js` and `test/cart.test.js` changed.
