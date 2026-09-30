@@ -13,11 +13,11 @@
 
 ## 2026-09-29 — Thiết lập harness, CI và code cơ bản (commit `0b6a74a`)
 - **Công cụ:** Claude Opus 4.6 (Antigravity IDE).
-- **Yêu cầu:** Thiết lập CI với Node 22, viết hàm `cartTotal` và bộ test cơ bản.
+- **Yêu cầu:** Thiết lập CI với Node 22, tạo file rules `AGENTS.md`, viết hàm `cartTotal` và bộ test cơ bản.
 - **Giữ lại:** Cấu trúc file CI (`npm ci`, `npm test`, `npm run lint` chạy mỗi khi push). Logic cốt lõi của hàm `cartTotal`: dùng hàm `reduce` tính subtotal, `Math.round` để làm tròn, `>=` cho ngưỡng freeship, và có vòng lặp validate dữ liệu trước.
-- **Thay đổi:** Ban đầu AI dùng Node 20 cho CI, mình bắt đổi sang Node 22 để khớp với slide bài giảng. AI dùng `item.price < 0` để kiểm tra giá, mình nhận ra như vậy sẽ bỏ sót `NaN` và `Infinity`, nên bắt sửa thành `typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0`. Code ở commit này đã chạy qua 26 test.
+- **Thay đổi:** AI tạo AGENTS.md (đề xuất tên rules.md, mình đổi thành AGENTS.md). Ban đầu AI dùng Node 20 cho CI, mình bắt đổi sang Node 22 để khớp với slide bài giảng. AI dùng `item.price < 0` để kiểm tra giá, mình nhận ra như vậy sẽ bỏ sót `NaN` và `Infinity`, nên bắt sửa thành `typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0`. Code ở commit này đã chạy qua 26 test.
 - **Bỏ qua:** Không có.
-- **Tự làm:** Đọc kỹ từng thay đổi và chạy lệnh `npm test` để kiểm chứng.
+- **Tự làm:** Đọc kỹ từng thay đổi và chạy lệnh `npm test` để kiểm chứng. Mình đọc từng dòng file AGENTS.md để kiểm tra các rule 'Never'.
 
 ---
 
@@ -32,7 +32,7 @@
 ---
 
 ## 2026-09-30 — Rà soát Rubric, tối ưu code và cập nhật báo cáo (từ commit `2d0f29b` tới `9674e9a`)
-- **Công cụ:** Claude Sonnet 4.6 (Review qua chat).
+- **Công cụ:** Claude Sonnet 5.5 (trên claude.ai).
 - **Yêu cầu:** Đánh giá lại toàn bộ code, bài test, brief và báo cáo chấm điểm dựa trên Rubric.
 - **Giữ lại / Áp dụng:** Tách bài test kiểm tra số nguyên thành 2 bài độc lập (`typeof number` và `Number.isInteger`). Bổ sung 2 bài test kiểm tra lỗi cố tình đặt ở item thứ hai. Xóa dòng comment thừa trong code và xóa luôn đoạn check `!items ||` (vì tài liệu đặc tả không hề yêu cầu). Cập nhật `SELF_ASSESSMENT_REPORT.md`: thêm link CI, bỏ các số dòng, liệt kê cụ thể 29 test và giữ nguyên mức điểm tự đánh giá là 100/100.
 - **Bỏ qua:** AI khuyên nên hạ điểm tự chấm xuống 95. Mình quyết định bác bỏ và giữ mức 100 điểm vì theo rubric thì lệch trong khoảng ±10 sẽ không bị trừ điểm, để 100 vẫn nằm trong vùng an toàn.
