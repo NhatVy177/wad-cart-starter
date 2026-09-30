@@ -28,9 +28,10 @@
 - `test/cart.test.js` — the test suite
 
 ## Files the assistant must NOT touch
-- `package.json` (except `scripts` and `devDependencies`)
+- `package.json` — do not change (lint gate already set up)
 - `README.md`
 - `.gitignore`
+- `.github/workflows/`
 
 ## Before you finish
 1. Run `npm test` — all tests must pass.

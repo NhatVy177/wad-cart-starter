@@ -1,47 +1,39 @@
 # AI-LOG
 
-**Student ID:** 23120192  
-**Date:** 2026-09-29  
+**Student ID:** 23120192
 
-## 2026-09-29 — Setup harness and rules file
-- **Tool:** Claude Opus 4.6.
-- **Asked for:** Create `AGENTS.md` rules file and `.github/workflows/ci.yml` for Node 22 CI.
-- **Kept:** The CI workflow structure: `npm ci`, `npm test`, `npm run lint` on every push.
-- **Changed:** The AI initially proposed `rules.md` as the filename; I renamed it to `AGENTS.md` to match the Antigravity tool convention. The CI initially used Node 20; I forced Node 22 to match the session 2 slides.
-- **Rejected:** Nothing else.
-- **By hand:** Read the generated `AGENTS.md` line by line to verify all "never" constraints were correct.
+---
 
-## 2026-09-29 — Add Prettier format gate
-- **Tool:** Claude Opus 4.6.
-- **Asked for:** Add Prettier as a format gate (devDependency only, `npm run lint` script).
-- **Kept:** `prettier` pinned at `3.9.9` in `devDependencies`; `"lint": "prettier --check \"src/**/*.js\" \"test/**/*.js\""` and `"lint:fix"` scripts in `package.json`; `.prettierrc.json` and `.gitattributes` to enforce LF line endings.
-- **Changed:** The AI initially left `devDependencies` empty. I caught this: Prettier must be installed for CI to run `npm run lint`. I explicitly requested it be pinned in `devDependencies`.
-- **Rejected:** Nothing.
-- **By hand:** Ran `npm run lint:fix` locally to verify formatting was clean before committing.
-
-## 2026-09-29 — Write brief.md
-- **Tool:** Claude Opus 4.6.
-- **Asked for:** Write a `brief.md` following the rubric and slides: files to touch, contract, error cases, "no dependencies".
-- **Kept:** The overall structure (Task, Files, Constraints, Contract, Error cases, Worked example, Done when).
-- **Changed:** "Done when" originally said "100% coverage" — not verifiable, changed to `npm test` green and `npm run lint` green. Also aligned the `package.json` restriction with `AGENTS.md`.
-- **Rejected:** Nothing.
-- **By hand:** Reviewed to confirm all 4 rubric requirements for the brief were present: allowed files, contract, error cases, no dependencies.
-
-## 2026-09-29 — Implement cartTotal and tests
-- **Tool:** Claude Opus 4.6.
-- **Asked for:** Implement `cartTotal` per `brief.md`, write tests using `node:test`.
-- **Kept:** Core logic: `reduce` for subtotal, `Math.round` for return value, `>=` for free-shipping threshold, validation loop before any calculation.
-- **Changed:** The AI used `item.price < 0` to check price. I caught that this misses `NaN`, `Infinity`, and strings. I asked for `typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0`. Also removed starter comment `// Implement cartTotal here` and removed the `!items ||` guard (not in spec). Renamed one test from "qty = 1" to "qty = 3" to match actual test data.
-- **Rejected:** Nothing.
-- **By hand:** Ran `npm test` (29/29 green) and `npm run lint` (clean) to verify.
-
-## 2026-09-29 — Roa soát checklist từ slide
+## 2026-09-29 — Initial red run
 - **Tool:** None.
 - **Asked for:** —
-- **By hand:** Checked each item from the slide marking checklist:
-  - ✅ No dependency added (only `prettier` as devDep, `src/` imports nothing).
-  - ✅ `Math.round` used, not `toFixed` — `cartTotal(...) === 467400` passes.
-  - ✅ `qty: 0`, `qty: 1.5`, `price: -1` all throw `RangeError`.
-  - ✅ Tests assert the spec (hardcoded expected values), not the implementation.
-  - Tách test `"return value is an integer"` thành 2 test riêng (`typeof` và `Number.isInteger`).
-  - Thêm 2 test kiểm tra item lỗi ở vị trí thứ hai (chứng minh validate trước khi tính).
+- **By hand:** Cloned `fithcmus/wad-cart-starter`, ran `npm test` — 1 test, 1 fail, `Error: not implemented` at `src/cart.js`. Created `NhatVy177/wad-cart-starter` on GitHub and switched remote to point there. This confirmed the harness worked before any code was written.
+
+---
+
+## 2026-09-29 — Harness, Prettier gate, brief, and implementation (committed together as `0b6a74a`)
+- **Tool:** Claude Opus 4.6 (Antigravity IDE).
+- **Asked for:** (1) `AGENTS.md` rules file and `.github/workflows/ci.yml`; (2) Prettier as format gate; (3) `brief.md`; (4) `cartTotal` implementation and tests.
+- **Kept:** CI structure (`npm ci`, `npm test`, `npm run lint` on push). Prettier pinned in `devDependencies`. Brief structure (Task, Files, Contract, Error cases, Done when). Core logic: `reduce` for subtotal, `Math.round` for return, `>=` for free-shipping threshold, validation loop before any calculation.
+- **Changed:** Renamed proposed `rules.md` to `AGENTS.md`. CI initially used Node 20 — I forced Node 22 to match the session 2 slides. AI left `devDependencies` empty — I caught this and pinned `prettier@3.9.9` explicitly. AI used `item.price < 0` to check price — I caught that this misses `NaN`, `Infinity`, and strings, and forced `typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0`. AI kept the starter comment `// Implement cartTotal here` — I removed it. AI included `!items ||` guard (not in spec) — I removed it. These four steps were done in one working session and committed together.
+- **Rejected:** First version of `brief.md` was just the assignment text copied in; I rejected it and wrote a proper brief with files, contract, error cases, and "no dependencies". First version of `SELF_ASSESSMENT_REPORT.md` had 14 rows invented by the AI against a rubric it had not read; I rejected it entirely.
+- **By hand:** Ran `npm test` (26/26 green at this point) and `npm run lint` (clean). Read every diff before accepting.
+
+---
+
+## 2026-09-29–30 — Document rewrites after rubric review
+- **Tool:** Claude Opus 4.6 (Antigravity IDE).
+- **Asked for:** Rewrite `AI-LOG.md`, `brief.md`, and `SELF_ASSESSMENT_REPORT.md` to match the real 5-criterion rubric.
+- **Kept:** The 5-entry log structure. Evidence lines pointing to specific test names and file names.
+- **Changed:** Removed 14-row invented rubric from report and replaced with 5-row real rubric. Rewrote brief from assignment text to a proper prompt with files, contract, errors, and "done when" conditions. Added `.prettierrc.json` and `.gitattributes` to enforce LF line endings on Windows.
+- **Rejected:** Draft report that used line numbers as evidence (line numbers shift when code changes).
+- **By hand:** Cross-checked each evidence line in the report against the actual file to make sure it was true.
+
+---
+
+## 2026-09-30 — Review with a second AI assistant and rewrite of documents
+- **Tool:** Claude Sonnet 4.6 (Antigravity IDE chat session — no direct repo access).
+- **Asked for:** Review of code, tests, brief, AI-LOG, and self-assessment against the rubric checklist.
+- **Kept / applied by me:** Split `"return value is an integer (typeof number, no decimals)"` into two separate tests (`"return value is typeof number"` and `"return value is an integer (no decimals)"`). Added two second-item validation tests: `"invalid qty in second item throws RangeError"` and `"invalid price (NaN) in second item throws RangeError"`. Removed the starter comment from `src/cart.js`. Removed `!items ||` guard. Fixed `AGENTS.md` to align with `brief.md` on `package.json` and added `.github/workflows/` to the not-touch list. Fixed self-assessment: removed wrong "loop doesn't exit early" bullet (throw exits immediately), changed "6 Never rules" to "6 rules, 3 of them Never", removed line numbers from evidence, added CI run link, corrected self-assessed total to 95.
+- **Rejected:** Suggestion to keep total at 100 — I chose 95 as a more calibrated estimate (Behaviour 30, Tests 19, Harness 19, Brief 14, AI-LOG 13).
+- **By hand:** Re-ran `npm test` (29/29 green) and `npm run lint` (clean). Checked CI run #6 at https://github.com/NhatVy177/wad-cart-starter/actions/runs/36666267461 — Success on commit `04a0abd`.
